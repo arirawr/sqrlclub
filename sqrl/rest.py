@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 from flask import request
 
 import os
@@ -80,5 +82,21 @@ def make_routes(app):
         except u.AcornNotFoundError:
             return json.dumps({"status": "error", "message": "no such user"})
 
+        if 'fileName' not in req:
+            return json.dumps({"status": "error", "message": "no filename specified"})
+        if 'file' not in req:
+            return json.dumps({"status": "error", "message": "no file given"})
 
+        p = path.join(acorn_path, req['filename'])
+        p_existed_before = path.exists(p)
 
+        try:
+            with open(p, 'w') as f:
+                f.write(req['file'])
+        except IOError:
+            return json.dumps({"status": "error", "message": "IO error"})
+
+        return json.dumps(
+                {"status": "ok",
+                "message": "acorn file written" + (
+                    (", overwriting " + p) if p_existed_before else " to new file")})
