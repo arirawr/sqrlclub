@@ -1,0 +1,33 @@
+{
+  "name": "iRemembeer",
+  "version": "0.1",
+  "main": "index.html",
+  "ignore": [
+    "**/.*",
+    "libs"
+  ],
+  "dependencies": {
+    "angular": "latest",
+    "angular-animate": "latest",
+    "angular-bootstrap": "latest",
+    "angular-loading-bar": "latest",
+    "angular-mocks": "latest",
+    "angular-route": "latest",
+    "angular-strap": "latest",
+    "AngularJS-Toaster": "latest",
+    "bootstrap": "latest",
+    "bootswatch": "latest",
+    "jquery": "latest",
+    "requirejs": "latest",
+    "requirejs-domready": "latest",
+    "ui-bootstrap": "latest",
+    "underscore": "latest",
+    "angular-ui-ace": "~0.1.1",
+    "ace": "~1.1.8"
+  },
+  "resolutions": {
+    "angular": "1.2.19",
+    "bootstrap": "~3.1.1",
+    "angular-ui-ace": "bower"
+  }
+}

@@ -1,0 +1,47 @@
+<div>
+    <h1></h1>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">Files</div>
+    <div class="panel-body">
+        <div ng-repeat="file in files">
+            <button type="button" class="btn btn-default btn-lg" ng-click="selectFile(file)">
+                <span class="glyphicon glyphicon-file" aria-hidden="true"></span> {{file.fileName}}
+            </button>
+        </span>
+    </div>
+</div>
+<div>
+    <div class="panel panel-default" ng-if="fileType === 'js'">
+        <div class="panel-heading" style="background-color: #00F6FF;">JavaScript</div>
+        <div class="panel-body">
+            <div ui-ace="{
+                            mode:'javascript',
+                            useWrapMode: true
+                        }"
+                 ng-model="code" style="height:200px"></div>
+        </div>
+    </div>
+
+    <div class="panel panel-default" ng-if="fileType === 'html'">
+        <div class="panel-heading" style="background-color: #CC2614;">HTML</div>
+        <div class="panel-body">
+            <div ui-ace="{
+                        mode:'html',
+                        useWrapMode: true
+                    }"
+                 ng-model="fileText" style="height:200px"></div>
+        </div>
+    </div>
+
+    <div class="panel panel-default" ng-if="fileType === 'css'">
+    <div class="panel-heading" style="background-color: #FF6E40;">CSS</div>
+
+    <div class="panel-body">
+        <div ui-ace="{
+                    mode:'css',
+                    useWrapMode: true
+                }"
+             ng-model="fileText" style="height:200px"></div>
+    </div>
+</div>

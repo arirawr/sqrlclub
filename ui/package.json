@@ -1,0 +1,48 @@
+{
+  "name": "iremembeer",
+  "version": "0.0.0",
+  "description": "app for beer lovers",
+  "main": "web.js",
+  "scripts": {
+    "install": "./node_modules/bower/bin/bower install"
+  },
+  "config": {
+    "unsafe-perm": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/trmiller/iRemembeer.git"
+  },
+  "keywords": [
+    "iRemembeer",
+    "beer",
+    "remember"
+  ],
+  "author": "trmiller",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/trmiller/iRemembeer/issues"
+  },
+  "homepage": "https://github.com/trmiller/iRemembeer",
+  "dependencies": {
+    "bower": "^1.3.6",
+    "express": "^4.4.5",
+    "gulp": "^3.8.5",
+    "gulp-changed": "^0.4.0",
+    "gulp-clean": "^0.3.0",
+    "gulp-html-replace": "^1.1.0",
+    "gulp-karma": "^0.0.4",
+    "gulp-less": "^1.2.3",
+    "gulp-uglify": "^0.3.1",
+    "gzippo": "^0.2.0",
+    "karma": "^0.12.16",
+    "karma-jasmine": "^0.1.5",
+    "karma-requirejs": "^0.2.2",
+    "less": "^1.7.3",
+    "logfmt": "^1.1.2",
+    "requirejs": "^2.1.14"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.5"
+  }
+}
