@@ -6732,9 +6732,31 @@ button.toast-close-button {
 .panel {
   border-radius: 5px;
 }
+.ace-editor {
+  height: 400px;
+}
 .navbar {
   background-color: #CC2614;
 }
 .ace_print-margin {
   display: none !important;
+}
+.col-center-block {
+  float: none !important;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+.panel-acorn {
+  margin-bottom: 0px;
+}
+#editAccordion {
+  padding: 0px;
+}
+.panel {
+  border: none;
+}
+#editAccordion .panel-group {
+  margin-bottom: 0px;
 }

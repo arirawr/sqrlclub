@@ -2,11 +2,16 @@ define([], function(){
     'use strict';
 
     var AcornController = function($scope, $routeParams, AcornService, FileService){
-        var currentAcorn = $routeParams.acornName;
+        $scope.currentAcorn = $routeParams.acornName;
         $scope.files = [];
+        $scope.accordionStatus = {
+            html:true,
+            css:true,
+            js:true
+        }
 
         var init = (function(){
-            AcornService.getAcorn(currentAcorn).then(function(result){
+            AcornService.getAcorn($scope.currentAcorn).then(function(result){
                $scope.files = result;
                if($scope.files.length) {
                    $scope.selectFile($scope.files[0]);
@@ -15,7 +20,7 @@ define([], function(){
         }());
 
         $scope.selectFile = function(file) {
-            FileService.getFile(currentAcorn, file.fileName).then(function (fileText) {
+            FileService.getFile($scope.currentAcorn, file.fileName).then(function (fileText) {
                 $scope.fileText = fileText;
                 $scope.fileType = file.fileType;
             });
