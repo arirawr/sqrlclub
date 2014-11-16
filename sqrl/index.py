@@ -32,6 +32,10 @@ def js_provider(res):
 def view_provider(res):
     return send_from_directory(path.join("ui", "build", "views"), res)
 
+@app.route('/img/<path:res>')
+def img_provider(res):
+    return send_from_directory(path.join("ui", "build", "img"), res)
+
 @app.route('/acorn/<username>/<acornname>/')
 @app.route('/acorn/<username>/<acornname>/<filename>')
 def acorn(username, acornname, filename="index.html"):
