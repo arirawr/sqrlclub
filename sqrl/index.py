@@ -1,4 +1,4 @@
-from flask import Flask, session, request, url_for, redirect, escape, render_template
+from flask import Flask, session, request, url_for, redirect, escape, render_template, send_from_directory
 import os
 from os import path
 
@@ -16,7 +16,21 @@ app = Flask(__name__)
 @app.route('/')
 @app.route('/<page>')
 def main(page='index.html'):
-    return render_template(page)
+    with open(path.join("ui/build", page), 'r') as f:
+        l = "".join([line for line in f])
+    return l
+
+@app.route('/css/<path:res>')
+def css_provider(res):
+    return send_from_directory(path.join("ui", "build", "css"), res)
+
+@app.route('/js/<path:res>')
+def js_provider(res):
+    return send_from_directory(path.join("ui", "build", "js"), res)
+
+@app.route('/views/<path:res>')
+def view_provider(res):
+    return send_from_directory(path.join("ui", "build", "views"), res)
 
 @app.route('/acorn/<username>/<acornname>/')
 @app.route('/acorn/<username>/<acornname>/<filename>')
