@@ -1,4 +1,4 @@
-from flask import g
+from flask import session
 
 import json
 import os
@@ -68,3 +68,14 @@ class User:
         self.acorns.append(acorn_name)
         os.makedirs(self.get_acorn_path(acorn_name))
 
+    def is_logged_in(self):
+        """ Determine whether the current user session is logged in as this user. """
+        if 'user' not in session:
+            return False # the user isn't logged in at all.
+        else:
+            return self == session['user']
+
+    def __eq__(self, other):
+        """ Usernames are unique, so User instances are the same if their usernames match.
+            """
+        return self.name == other.name

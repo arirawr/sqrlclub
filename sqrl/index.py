@@ -1,4 +1,4 @@
-from flask import Flask, session, request, url_for, redirect, escape
+from flask import Flask, session, request, url_for, redirect, escape, render_template
 import os
 from os import path
 
@@ -14,8 +14,9 @@ import rest
 app = Flask(__name__)
 
 @app.route('/')
-def main():
-    return "yo"
+@app.route('/<page>')
+def main(page='index.html'):
+    return render_template(page)
 
 @app.route('/acorn/<username>/<acornname>/')
 @app.route('/acorn/<username>/<acornname>/<filename>')
