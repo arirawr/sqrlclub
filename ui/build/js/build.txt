@@ -5,6 +5,7 @@ requirelib.js
 jquery.js
 angular.js
 angularRoute.js
+angularAnimate.js
 controllers/AcornController.js
 controllers/AcornsController.js
 controllers/FileController.js
@@ -15,7 +16,6 @@ services/FileService.js
 services/UserService.js
 services/main.js
 uiBootstrap.js
-angularAnimate.js
 ngStrap.js
 ngStrapTpl.js
 loadingBar.js

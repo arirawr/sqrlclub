@@ -18,7 +18,7 @@ define([], function(){
                     return self.acorns;
                 });
             */
-            self.acorns = ['acorns1', 'acorn2', 'acorn3'];;
+            self.acorns = ['abc', 'acorn2', 'acorn3'];;
             var thing = $q.defer();
             thing.resolve(self.acorns);
             return thing.promise;
@@ -38,11 +38,23 @@ define([], function(){
                     fileType:'html'
                 },
                 {
+                    fileName:'index2.html',
+                    fileType:'html'
+                },
+                {
+                    fileName:'index3.html',
+                    fileType:'html'
+                },
+                {
                     fileName:'main.css',
                     fileType:'css'
                 },
                 {
                     fileName:'main.js',
+                    fileType:'js'
+                },
+                {
+                    fileName:'supp0rtf1l3z0r.js',
                     fileType:'js'
                 }
             ]);

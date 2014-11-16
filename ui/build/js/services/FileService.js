@@ -26,6 +26,20 @@ define([], function(){
 			return thing.promise;
 		};
 
+		self.saveFile = function(acornName, fileName, fileText){
+			var thing = $q.defer();
+			thing.resolve('yay!');
+			return thing.promise;
+			/*
+			return $http.post('http://sqrl.club:5000/rest/'+UserService.getUserName()+'/acorns/'+acornName+'/'+fileName,
+				{
+					'file':fileText
+				}).then(function(results){
+					return results.data;
+				});
+			*/
+		}
+
 		return self;
 	};
 	return ["$http", '$q', 'UserService', FileService];

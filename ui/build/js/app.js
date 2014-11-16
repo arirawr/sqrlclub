@@ -1,6 +1,7 @@
 define([
 	'angular',
 	'angularRoute',
+	'angularAnimate',
 	'controllers',
 	'services',
 	'uiBootstrap',
@@ -22,6 +23,7 @@ define([
 
 		var app = angular.module('sqrl', [
 			'ngRoute',
+			'ngAnimate',
 			'sqrl.controllers',
 			'sqrl.services',
 			'ui.bootstrap',
