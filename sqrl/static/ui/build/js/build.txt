@@ -10,6 +10,8 @@ controllers/AcornController.js
 controllers/AcornsController.js
 controllers/FileController.js
 controllers/LoginController.js
+controllers/AddFileController.js
+controllers/AddAcornController.js
 controllers/main.js
 services/AcornService.js
 services/FileService.js

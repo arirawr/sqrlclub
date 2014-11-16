@@ -5,9 +5,10 @@ define(
 		'controllers/AcornsController',
 		'controllers/FileController',
 		'controllers/LoginController',
-		'controllers/AddFileController'
+		'controllers/AddFileController',
+		'controllers/AddAcornController'
 	],
-	function(angular, AcornController, AcornsController, FileController, LoginController, AddFileController){
+	function(angular, AcornController, AcornsController, FileController, LoginController, AddFileController, AddAcornController){
 		'use strict';
 
 		return angular.module('sqrl.controllers', [])
@@ -15,5 +16,6 @@ define(
 			.controller('AcornsController', AcornsController)
 			.controller('FileController', FileController)
 			.controller('LoginController', LoginController)
-			.controller('AddFileController', AddFileController);
+			.controller('AddFileController', AddFileController)
+			.controller('AddAcornController', AddAcornController);
 	});

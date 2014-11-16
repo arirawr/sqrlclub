@@ -1,12 +1,12 @@
 define([], function(){
     
 
-    var AcornController = function($scope, $routeParams, $timeout, AcornService, FileService){
+    var AcornController = function($scope, $location, $routeParams, $timeout, $modal, AcornService, FileService, UserService) {
         var changedTimerId = null,
             aceEditor = null,
             aceSession = null,
             aceMappings = {
-                'js':'ace/mode/javascript',
+                'js': 'ace/mode/javascript',
                 'css': 'ace/mode/css',
                 'html': 'ace/mode/html'
             }
@@ -14,68 +14,107 @@ define([], function(){
         $scope.currentAcorn = $routeParams.acornName;
         $scope.files = [];
         $scope.accordionStatus = {
-            html:true,
-            css:true,
-            js:true
+            html: true,
+            css: true,
+            js: true
         };
-        $scope.fileText='';
         $scope.unsaved = false;
         $scope.saveMessage = '';
+        $scope.userName = UserService.getUserName();
 
-        var init = (function(){
-            AcornService.getAcorn($scope.currentAcorn).then(function(result){
-               $scope.files = result;
-               if($scope.files.length) {
-                   $scope.selectFile($scope.files[0]);
-               }
-            });
+
+        var init = (function () {
+            if($scope.userName===''){
+                $location.url('/');
+            } else {
+                AcornService.getAcorn($scope.currentAcorn).then(function (result) {
+                    $scope.files = result;
+                    if ($scope.files.length) {
+                        $scope.selectFile($scope.files[0]);
+                    } else {
+                        generateNewAcorn();
+                    }
+                });
+            }
         }());
 
-        $scope.selectFile = function(file) {
-            saveChanges();
-            FileService.getFile($scope.currentAcorn, file.fileName).then(function (fileText) {
-                $scope.fileType = file.fileType;
-                $scope.fileName = file.fileName;
-                setAceSession(file.fileType,fileText);
-            });
+        var generateNewAcorn = function () {
+            $scope.files = FileService.getTemplateFiles($scope.currentAcorn);
+            $scope.selectFile($scope.selectFile($scope.files[0]));
         };
 
-        var saveChanges = function(){
-            if($scope.fileName) { //when page is first loading
-                var fileContents = aceSession.getValue();
-                FileService.saveFile($scope.currentAcorn, $scope.fileName, $scope.fileText).then(function () {
-                    $scope.unsaved = false;
-                    $scope.saveMessage += ' (saved)';
-                    //$timeout(function(){
-                    //    $scope.saved=null;
-                    //},2000);
+        $scope.selectFile = function (file) {
+            if (file) {
+                saveChanges();
+                var tempFileName = file.fileName;
+                FileService.getFile($scope.currentAcorn, file.fileName, file.fileType).then(function (fileResult) {
+                    if(tempFileName===fileResult.fileName) {
+                        $scope.fileType = file.fileType;
+                        $scope.fileName = file.fileName;
+                        setAceSession(file.fileType, fileResult.fileData);
+                    }
                 });
             }
         };
 
-        var setAceSession = function(fileType, fileContents){
-            aceEditor.setValue(fileContents);
-            aceSession.setMode(aceMappings[fileType]);
-            aceEditor.focus();
+        $scope.addFile = function(fileType){
+            var modalInstance = $modal.open({
+                templateUrl: 'views/addFile.html',
+                controller: 'AddFileController',
+                size:'sm',
+                resolve:{
+                    fileType: function(){
+                        return fileType;
+                    }
+                }
+            });
 
-        }
+            modalInstance.result.then(function(fileName){
+                if(fileName){
+                    var file = {
+                        fileType:fileType,
+                        fileName:fileName
+                    };
+                    $scope.files.push(file);
+                    $scope.selectFile(file);
+                }
+            });
+        };
 
-        $scope.aceChanged = function() {
-            if(!changedTimerId){
-                changedTimerId = $timeout(function(){
-                    saveChanges();
-                    changedTimerId = null;
-                },4000);
-                $scope.unsaved = true;
-                $scope.saveMessage = '*';
+        var saveChanges = function () {
+            if ($scope.fileName) { //when page is first loading
+                var fileContents = aceSession.getValue();
+                FileService.saveFile($scope.currentAcorn, $scope.fileName, fileContents).then(function () {
+                    $scope.unsaved = false;
+                    $scope.saveMessage = '* (saved)';
+                });
             }
         };
 
-        $scope.aceLoaded = function(editor){
+        var setAceSession = function (fileType, fileContents) {
+            aceEditor.setValue(fileContents,-1);
+            aceSession.setMode(aceMappings[fileType]);
+            $timeout(function(){
+                aceEditor.focus();
+            },0);
+        };
+
+        $scope.aceChanged = function () {
+            if (!changedTimerId) {
+                changedTimerId = $timeout(function () {
+                    saveChanges();
+                    changedTimerId = null;
+                }, 4000);
+            }
+            $scope.unsaved = true;
+            $scope.saveMessage = '*';
+        };
+
+        $scope.aceLoaded = function (editor) {
             aceEditor = editor;
             aceSession = editor.getSession();
         };
     };
 
-    return ["$scope", '$routeParams', '$timeout', 'AcornService', 'FileService', AcornController];
+    return ["$scope", '$location', '$routeParams', '$timeout', '$modal', 'AcornService', 'FileService', 'UserService', AcornController];
 });

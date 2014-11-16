@@ -1,7 +1,7 @@
 define([], function(){
     'use strict';
 
-    var AcornController = function($scope, $routeParams, $timeout, $modal, AcornService, FileService, UserService) {
+    var AcornController = function($scope, $location, $routeParams, $timeout, $modal, AcornService, FileService, UserService) {
         var changedTimerId = null,
             aceEditor = null,
             aceSession = null,
@@ -22,15 +22,20 @@ define([], function(){
         $scope.saveMessage = '';
         $scope.userName = UserService.getUserName();
 
+
         var init = (function () {
-            AcornService.getAcorn($scope.currentAcorn).then(function (result) {
-                $scope.files = result;
-                if ($scope.files.length) {
-                    $scope.selectFile($scope.files[0]);
-                } else {
-                    generateNewAcorn();
-                }
-            });
+            if($scope.userName===''){
+                $location.url('/');
+            } else {
+                AcornService.getAcorn($scope.currentAcorn).then(function (result) {
+                    $scope.files = result;
+                    if ($scope.files.length) {
+                        $scope.selectFile($scope.files[0]);
+                    } else {
+                        generateNewAcorn();
+                    }
+                });
+            }
         }());
 
         var generateNewAcorn = function () {
@@ -54,7 +59,7 @@ define([], function(){
 
         $scope.addFile = function(fileType){
             var modalInstance = $modal.open({
-                templateUrl: 'views/addAcorn.html',
+                templateUrl: 'views/addFile.html',
                 controller: 'AddFileController',
                 size:'sm',
                 resolve:{
@@ -111,5 +116,5 @@ define([], function(){
         };
     };
 
-    return ["$scope", '$routeParams', '$timeout', '$modal', 'AcornService', 'FileService', 'UserService', AcornController];
+    return ["$scope", '$location', '$routeParams', '$timeout', '$modal', 'AcornService', 'FileService', 'UserService', AcornController];
 });

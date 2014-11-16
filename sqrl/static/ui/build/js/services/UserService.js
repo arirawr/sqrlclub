@@ -16,7 +16,7 @@ define([], function(){
         };
 
         self.getUserName = function(){
-            return self.userName ? self.userName : 'dean';
+            return self.userName;// ? self.userName : 'dean';
         };
 
         return self;

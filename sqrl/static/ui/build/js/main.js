@@ -40124,12 +40124,12 @@ define("angularAnimate", ["angular"], function(){});
 define('controllers/AcornController',[], function(){
     
 
-    var AcornController = function($scope, $routeParams, $timeout, AcornService, FileService){
+    var AcornController = function($scope, $location, $routeParams, $timeout, $modal, AcornService, FileService, UserService) {
         var changedTimerId = null,
             aceEditor = null,
             aceSession = null,
             aceMappings = {
-                'js':'ace/mode/javascript',
+                'js': 'ace/mode/javascript',
                 'css': 'ace/mode/css',
                 'html': 'ace/mode/html'
             }
@@ -40137,92 +40137,162 @@ define('controllers/AcornController',[], function(){
         $scope.currentAcorn = $routeParams.acornName;
         $scope.files = [];
         $scope.accordionStatus = {
-            html:true,
-            css:true,
-            js:true
+            html: true,
+            css: true,
+            js: true
         };
-        $scope.fileText='';
         $scope.unsaved = false;
         $scope.saveMessage = '';
+        $scope.userName = UserService.getUserName();
 
-        var init = (function(){
-            AcornService.getAcorn($scope.currentAcorn).then(function(result){
-               $scope.files = result;
-               if($scope.files.length) {
-                   $scope.selectFile($scope.files[0]);
-               }
-            });
+
+        var init = (function () {
+            if($scope.userName===''){
+                $location.url('/');
+            } else {
+                AcornService.getAcorn($scope.currentAcorn).then(function (result) {
+                    $scope.files = result;
+                    if ($scope.files.length) {
+                        $scope.selectFile($scope.files[0]);
+                    } else {
+                        generateNewAcorn();
+                    }
+                });
+            }
         }());
 
-        $scope.selectFile = function(file) {
-            saveChanges();
-            FileService.getFile($scope.currentAcorn, file.fileName).then(function (fileText) {
-                $scope.fileType = file.fileType;
-                $scope.fileName = file.fileName;
-                setAceSession(file.fileType,fileText);
-            });
+        var generateNewAcorn = function () {
+            $scope.files = FileService.getTemplateFiles($scope.currentAcorn);
+            $scope.selectFile($scope.selectFile($scope.files[0]));
         };
 
-        var saveChanges = function(){
-            if($scope.fileName) { //when page is first loading
-                var fileContents = aceSession.getValue();
-                FileService.saveFile($scope.currentAcorn, $scope.fileName, $scope.fileText).then(function () {
-                    $scope.unsaved = false;
-                    $scope.saveMessage += ' (saved)';
-                    //$timeout(function(){
-                    //    $scope.saved=null;
-                    //},2000);
+        $scope.selectFile = function (file) {
+            if (file) {
+                saveChanges();
+                var tempFileName = file.fileName;
+                FileService.getFile($scope.currentAcorn, file.fileName, file.fileType).then(function (fileResult) {
+                    if(tempFileName===fileResult.fileName) {
+                        $scope.fileType = file.fileType;
+                        $scope.fileName = file.fileName;
+                        setAceSession(file.fileType, fileResult.fileData);
+                    }
                 });
             }
         };
 
-        var setAceSession = function(fileType, fileContents){
-            aceEditor.setValue(fileContents);
-            aceSession.setMode(aceMappings[fileType]);
-            aceEditor.focus();
+        $scope.addFile = function(fileType){
+            var modalInstance = $modal.open({
+                templateUrl: 'views/addFile.html',
+                controller: 'AddFileController',
+                size:'sm',
+                resolve:{
+                    fileType: function(){
+                        return fileType;
+                    }
+                }
+            });
 
-        }
+            modalInstance.result.then(function(fileName){
+                if(fileName){
+                    var file = {
+                        fileType:fileType,
+                        fileName:fileName
+                    };
+                    $scope.files.push(file);
+                    $scope.selectFile(file);
+                }
+            });
+        };
 
-        $scope.aceChanged = function() {
-            if(!changedTimerId){
-                changedTimerId = $timeout(function(){
-                    saveChanges();
-                    changedTimerId = null;
-                },4000);
-                $scope.unsaved = true;
-                $scope.saveMessage = '*';
+        var saveChanges = function () {
+            if ($scope.fileName) { //when page is first loading
+                var fileContents = aceSession.getValue();
+                FileService.saveFile($scope.currentAcorn, $scope.fileName, fileContents).then(function () {
+                    $scope.unsaved = false;
+                    $scope.saveMessage = '* (saved)';
+                });
             }
         };
 
-        $scope.aceLoaded = function(editor){
+        var setAceSession = function (fileType, fileContents) {
+            aceEditor.setValue(fileContents,-1);
+            aceSession.setMode(aceMappings[fileType]);
+            $timeout(function(){
+                aceEditor.focus();
+            },0);
+        };
+
+        $scope.aceChanged = function () {
+            if (!changedTimerId) {
+                changedTimerId = $timeout(function () {
+                    saveChanges();
+                    changedTimerId = null;
+                }, 4000);
+            }
+            $scope.unsaved = true;
+            $scope.saveMessage = '*';
+        };
+
+        $scope.aceLoaded = function (editor) {
             aceEditor = editor;
             aceSession = editor.getSession();
         };
     };
 
-    return ["$scope", '$routeParams', '$timeout', 'AcornService', 'FileService', AcornController];
+    return ["$scope", '$location', '$routeParams', '$timeout', '$modal', 'AcornService', 'FileService', 'UserService', AcornController];
 });
 define('controllers/AcornsController',[], function(){
     
 
-    var AcornsController = function($scope, $location, AcornService){
+    var AcornsController = function($scope, $location, $modal, AcornService, UserService){
         $scope.acorns = [];
-        $scope.newAcornName = '';
 
         $scope.addAcorn = function() {
-            AcornService.addAcorn($scope.newAcornName);
-        }
+            var newAcornModal = $modal.open({
+                templateUrl: 'views/addAcorn.html',
+                controller: 'AddAcornController',
+                size: 'sm'
+            });
 
-        AcornService.getAcorns().then(function(){
-           $scope.acorns = AcornService.acorns;
-        });
+            newAcornModal.result.then(function(acornName){
+                AcornService.addAcorn(acornName).then(function(){
+                    $scope.goToAcorn(acornName);
+                });
+            });
+        };
 
         $scope.goToAcorn = function(acorn){
             $location.url('/acorn/'+acorn);
         };
+
+        var getAcorns = function(){
+            AcornService.getAcorns().then(function(){
+                $scope.acorns = AcornService.acorns;
+            });
+        };
+
+        var login = (function(){
+            var userName = UserService.getUserName();
+
+            if(userName===''){
+                var modalInstance = $modal.open({
+                    templateUrl: 'views/login.html',
+                    controller: 'LoginController',
+                    size:'sm',
+                    backdrop:'static',
+                    keyboard:false
+                });
+
+                modalInstance.result.then(function(){
+                    getAcorns();
+                });
+            } else {
+                $scope.acorns = AcornService.acorns;
+            }
+        }());
     };
 
-    return ["$scope", '$location', 'AcornService', AcornsController];
+    return ["$scope", '$location', '$modal', 'AcornService', 'UserService', AcornsController];
 });
 
 define('controllers/FileController',[], function(){
@@ -40250,34 +40320,102 @@ define('controllers/FileController',[], function(){
 define('controllers/LoginController',[], function(){
     
 
-    var LoginController = function($scope, $location, UserService){
+    var LoginController = function($scope, $modalInstance, UserService){
         $scope.userName = '';
 
         $scope.login = function() {
-            UserService.login($scope.userName).then(function(response) {
-                $location.url('/acorns')
-            });
+            UserService.login($scope.userName).then(function(){
+                $modalInstance.close();
+            })
+        };
+
+        $scope.enter = function(event){
+            if(event.which ===13){
+                $scope.login();
+            }
         };
     };
 
-    return ["$scope", '$location', 'UserService', LoginController];
+    return ["$scope", '$modalInstance', 'UserService', LoginController];
 });
+define('controllers/AddFileController',[], function(){
+    
+
+    var AddFileController = function($scope, fileType, $modalInstance){
+        $scope.newFileName = '.'+fileType;
+
+        $scope.ok = function(){
+            $modalInstance.close($scope.newFileName);
+        };
+
+        $scope.enter = function(event){
+          if(event.which ===13){
+              $scope.ok();
+          }
+        };
+
+        $scope.cancel = function(){
+            $modalInstance.dismiss(null);
+        };
+
+        var init = (function(){
+            var ele =angular.element($('.add-file input'));
+            ele.focus();
+        }());
+    };
+
+    return ["$scope", 'fileType', '$modalInstance', AddFileController];
+});
+
+define('controllers/AddAcornController',[], function(){
+    
+
+    var AddAcornController = function($scope, $modalInstance){
+        $scope.newAcornName = '';
+
+        $scope.ok = function(){
+            $modalInstance.close($scope.newAcornName);
+        };
+
+        $scope.enter = function(event){
+            if(event.which ===13){
+                $scope.ok();
+            }
+        };
+
+        $scope.cancel = function(){
+            $modalInstance.dismiss(null);
+        };
+
+        var init = (function(){
+            var ele =angular.element($('input'));
+            ele.focus();
+        }());
+    };
+
+    return ["$scope", '$modalInstance', AddAcornController];
+});
+
 define(
 	'controllers/main',[
 		'angular',
 		'controllers/AcornController',
 		'controllers/AcornsController',
 		'controllers/FileController',
-		'controllers/LoginController'
+		'controllers/LoginController',
+		'controllers/AddFileController',
+		'controllers/AddAcornController'
 	],
-	function(angular, AcornController, AcornsController, FileController, LoginController){
+	function(angular, AcornController, AcornsController, FileController, LoginController, AddFileController, AddAcornController){
 		
 
 		return angular.module('sqrl.controllers', [])
 			.controller('AcornController', AcornController)
 			.controller('AcornsController', AcornsController)
 			.controller('FileController', FileController)
-			.controller('LoginController', LoginController);
+			.controller('LoginController', LoginController)
+			.controller('AddFileController', AddFileController)
+			.controller('AddAcornController', AddAcornController);
 	});
 define('controllers', ['controllers/main'], function (main) { return main; });
 
@@ -40294,27 +40432,30 @@ define('services/AcornService',[], function(){
         };
 
         self.getAcorns = function() {
-            /*
+
             return $http.get('http://sqrl.club:5000/rest/'+getUserName()+'/acorns')
                 .then(function(response){
                     self.acorns = response.data;
                     return self.acorns;
                 });
-            */
+            /*
             self.acorns = ['abc', 'acorn2', 'acorn3'];;
             var thing = $q.defer();
             thing.resolve(self.acorns);
             return thing.promise;
+            */
         };
 
         self.getAcorn = function (acornName){
-            /*
+
           return $http.get('http://sqrl.club:5000/rest/'+getUserName()+'/acorns/'+acornName)
               .then(function(response){
                   return response.data;
               });
-              */
+              /*
             var thing = $q.defer();
+            thing.resolve([]);
+            /*
             thing.resolve([
                 {
                     fileName:'index.html',
@@ -40341,7 +40482,10 @@ define('services/AcornService',[], function(){
                     fileType:'js'
                 }
             ]);
+
             return thing.promise;
+            */
+
         };
 
         self.setAcorns = function(acorns) {
@@ -40367,42 +40511,87 @@ define('services/FileService',[], function(){
 
 	var FileService = function($http, $q, UserService){
 		var self = this,
-			cache = {};
+			//cache = {},
+			templateFiles=[
+				{
+					fileType:'html',
+					fileName:'index.html'
+				},
+				{
+					fileType:'js',
+					fileName:'app.js'
+					},
+				{
+					fileType:'css',
+					fileName:'main.css'
+				}
+			],
+			template = {
+				'js':'(function(window, document, undefined){\n\n}(window,document));',
+				'html':'<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<title>My awesome page!</title>\n\t\t<link rel="stylesheet" type="text/css" media="all" href="main.css"/>\n\t</head>\n\t<body>\n\t\t<p>My awesome website!</p>\n\t\t<script src="app.js"></script>\n\t</body>\n</html>',
+				'css':'body {\n\tbackground-color:Red;\n}\n\np {\n\tcolor:white;\n}'
+			};
 
 		var getUserName = function(){
 			return UserService.getUserName();
+			return UserService.getUserName();
 		};
 
-		self.getFile = function(acornName, fileName) {
-			var key = acornName+'.'+fileName;
+		self.getTemplateFiles = function(acornName){
+			createTemplateFilesOnServer(acornName);
+			return templateFiles;
+		};
+
+		var createTemplateFilesOnServer = function(acornName){
+			angular.forEach(templateFiles,function(file){
+				self.getFile(acornName,file.fileName,file.fileType);
+			});
+		};
+
+		self.getFile = function(acornName, fileName, fileType) {
+			//var thing =$q.defer();
+			//thing.resolve(template[fileType]);
+			//return thing.promise;
+
+			//var key = acornName+'.'+fileName;
 
 			//if(cache[key]){
 			//	$q.when(cache[key]);
 			//}
 
-			//return $http.get('http://sqrl.club:5000/rest/'+getUserName()+'/acorns/'+acornName+'/'+fileName)
-			//	.then(function(result){
-			//		cache[key] = result.data.file;
-			//		return cache[key];
-			//});
-			var thing =$q.defer();
-			thing.resolve('here is some random file text');
-			return thing.promise;
+			var promise = $http.get('http://sqrl.club:5000/rest/'+getUserName()+'/acorns/'+acornName+'/'+fileName)
+				.then(function(result){
+					if(!result.data.file){
+						result.data.file = template[fileType];
+					}
+					//cache[key] = result.data.file;
+					return {
+						fileName: fileName,
+						fileData: result.data.file
+					};
+				});
+
+			return promise;
 		};
 
 		self.saveFile = function(acornName, fileName, fileText){
-			var thing = $q.defer();
-			thing.resolve('yay!');
-			return thing.promise;
-			/*
+			//var thing = $q.defer();
+			//thing.resolve('yay!');
+			//return thing.promise;
+
+			//var key = acornName+'.'+fileName;
+			//cache[key] = fileText;
+
 			return $http.post('http://sqrl.club:5000/rest/'+UserService.getUserName()+'/acorns/'+acornName+'/'+fileName,
 				{
 					'file':fileText
 				}).then(function(results){
 					return results.data;
 				});
-			*/
-		}
+
+		};
+
+
 
 		return self;
 	};
@@ -40426,7 +40615,7 @@ define('services/UserService',[], function(){
         };
 
         self.getUserName = function(){
-            return self.userName ? self.userName : 'dean';
+            return self.userName;// ? self.userName : 'dean';
         };
 
         return self;
@@ -50059,6 +50248,10 @@ define('app',[
 			'toaster',
 			'ui.ace'
 		]);
+
+		app.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider){
+			cfpLoadingBarProvider.latencyThreshold = 100;
+		}]);
 		return app;
 	});
 define('routes',['angular', 'app'], function(angular, app){
@@ -50066,10 +50259,6 @@ define('routes',['angular', 'app'], function(angular, app){
 
 	return app.config(['$routeProvider', function($routeProvider){
 		$routeProvider
-		.when('/',{
-			templateUrl: 'views/login.html',
-			controller: 'LoginController'
-		})
 		.when('/acorns',{
 			templateUrl: 'views/acorns.html',
 			controller: 'AcornsController'
@@ -50077,7 +50266,8 @@ define('routes',['angular', 'app'], function(angular, app){
 		.when('/acorn/:acornName',{
 			templateUrl: 'views/acorn.html',
 			controller: 'AcornController'
-		});
+		})
+		.otherwise({redirectTo: '/acorns'});
 	}]);
 });
 /*!

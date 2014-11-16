@@ -1,9 +1,13 @@
-<div>
-    <input type="text" ng-model="newAcornName"/>
-    <div ng-click="addAcorn()">Add Acorn</div>
+<div class="row">
+    <div ng-click="addAcorn()">
+        <span>
+            <h3>Add Acorn</h3>
+        </span>
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+    </div>
 </div>
 
-<div>
+<div class="row">
     <div ng-repeat="acorn in acorns">
         <div ng-click="goToAcorn(acorn)">
             {{acorn}}

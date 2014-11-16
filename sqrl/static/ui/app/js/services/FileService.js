@@ -20,16 +20,17 @@ define([], function(){
 			],
 			template = {
 				'js':'(function(window, document, undefined){\n\n}(window,document));',
-				'html':'<!DOCTYPE html>\n<html>\n\t<head>My awesome page!</head>\n\t<body>\n\t\t<p>My awesome website!</p>\n\t</body>\n</html>',
-				'css':'.body {\n\tbackground-color:pink;\n}\n\np {\n\tcolor:white;\n}'
+				'html':'<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<title>My awesome page!</title>\n\t\t<link rel="stylesheet" type="text/css" media="all" href="main.css"/>\n\t</head>\n\t<body>\n\t\t<p>My awesome website!</p>\n\t\t<script src="app.js"></script>\n\t</body>\n</html>',
+				'css':'body {\n\tbackground-color:Red;\n}\n\np {\n\tcolor:white;\n}'
 			};
 
 		var getUserName = function(){
 			return UserService.getUserName();
+			return UserService.getUserName();
 		};
 
 		self.getTemplateFiles = function(acornName){
-			createTemplateFilesOnServer();
+			createTemplateFilesOnServer(acornName);
 			return templateFiles;
 		};
 

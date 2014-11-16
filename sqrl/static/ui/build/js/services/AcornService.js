@@ -11,27 +11,30 @@ define([], function(){
         };
 
         self.getAcorns = function() {
-            /*
+
             return $http.get('http://sqrl.club:5000/rest/'+getUserName()+'/acorns')
                 .then(function(response){
                     self.acorns = response.data;
                     return self.acorns;
                 });
-            */
+            /*
             self.acorns = ['abc', 'acorn2', 'acorn3'];;
             var thing = $q.defer();
             thing.resolve(self.acorns);
             return thing.promise;
+            */
         };
 
         self.getAcorn = function (acornName){
-            /*
+
           return $http.get('http://sqrl.club:5000/rest/'+getUserName()+'/acorns/'+acornName)
               .then(function(response){
                   return response.data;
               });
-              */
+              /*
             var thing = $q.defer();
+            thing.resolve([]);
+            /*
             thing.resolve([
                 {
                     fileName:'index.html',
@@ -58,7 +61,10 @@ define([], function(){
                     fileType:'js'
                 }
             ]);
+
             return thing.promise;
+            */
+
         };
 
         self.setAcorns = function(acorns) {
