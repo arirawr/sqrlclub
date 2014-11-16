@@ -1,8 +1,9 @@
-<div>
-    <div>
-        <input type="text" ng-model="userName"/>
-    </div>
-    </div>
-        <span ng-click="login()">Log In</span>
-    </div>
+<div class="modal-header navbar">
+    <h3 class="modal-title" style="color:white;">Login</h3>
+</div>
+<div class="modal-body add-file">
+    <input type="text" ng-model="userName" ng-keypress="enter($event)" style="width:100%"/>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="login()">OK</button>
 </div>

@@ -1,7 +1,7 @@
 define([], function(){
     'use strict';
 
-    var AcornsController = function($scope, $location, AcornService){
+    var AcornsController = function($scope, $location, $modal, AcornService){
         $scope.acorns = [];
         $scope.newAcornName = '';
 
@@ -9,14 +9,26 @@ define([], function(){
             AcornService.addAcorn($scope.newAcornName);
         }
 
-        AcornService.getAcorns().then(function(){
-           $scope.acorns = AcornService.acorns;
-        });
-
         $scope.goToAcorn = function(acorn){
             $location.url('/acorn/'+acorn);
         };
+
+        var login = (function(){
+            var modalInstance = $modal.open({
+                templateUrl: 'views/login.html',
+                controller: 'LoginController',
+                size:'sm',
+                backdrop:'static',
+                keyboard:false
+            });
+
+            modalInstance.result.then(function(){
+                AcornService.getAcorns().then(function(){
+                    $scope.acorns = AcornService.acorns;
+                });
+            })
+        }());
     };
 
-    return ["$scope", '$location', 'AcornService', AcornsController];
+    return ["$scope", '$location', '$modal', 'AcornService', AcornsController];
 });

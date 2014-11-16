@@ -31,5 +31,9 @@ define([
 			'toaster',
 			'ui.ace'
 		]);
+
+		app.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider){
+			cfpLoadingBarProvider.latencyThreshold = 100;
+		}]);
 		return app;
 	});
