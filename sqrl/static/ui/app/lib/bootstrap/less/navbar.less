@@ -12,7 +12,7 @@
   position: relative;
   min-height: @navbar-height; // Ensure a navbar always shows (e.g., without a .navbar-brand in collapsed mode)
   margin-bottom: @navbar-margin-bottom;
-  border: 1px solid transparent;
+  border: 0 solid transparent;
 
   // Prevent floats from breaking the navbar
   &:extend(.clearfix all);
@@ -51,7 +51,7 @@
   overflow-x: visible;
   padding-right: @navbar-padding-horizontal;
   padding-left:  @navbar-padding-horizontal;
-  border-top: 1px solid transparent;
+  border-top: 0 solid transparent;
   box-shadow: inset 0 1px 0 rgba(255,255,255,.1);
   &:extend(.clearfix all);
   -webkit-overflow-scrolling: touch;
@@ -128,7 +128,7 @@
 // Static top (unfixed, but 100% wide) navbar
 .navbar-static-top {
   z-index: @zindex-navbar;
-  border-width: 0 0 1px;
+  border-width: 0 0 0;
 
   @media (min-width: @grid-float-breakpoint) {
     border-radius: 0;
@@ -150,12 +150,12 @@
 }
 .navbar-fixed-top {
   top: 0;
-  border-width: 0 0 1px;
+  border-width: 0 0 0;
 }
 .navbar-fixed-bottom {
   bottom: 0;
   margin-bottom: 0; // override .navbar defaults
-  border-width: 1px 0 0;
+  border-width: 0 0 0;
 }
 
 
@@ -163,8 +163,9 @@
 
 .navbar-brand {
   float: left;
-  padding: @navbar-padding-vertical @navbar-padding-horizontal;
-  font-size: @font-size-large;
+  padding: @navbar-padding-vertical 25;
+  font-family: @font-family-sans-title;
+  font-size: @font-size-h1;
   line-height: @line-height-computed;
   height: @navbar-height;
 
@@ -199,7 +200,7 @@
   .navbar-vertical-align(34px);
   background-color: transparent;
   background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
-  border: 1px solid transparent;
+  border: 0 solid transparent;
   border-radius: @border-radius-base;
 
   // We remove the `outline` here, but later compensate by attaching `:hover`
@@ -213,7 +214,7 @@
     display: block;
     width: 22px;
     height: 2px;
-    border-radius: 1px;
+    border-radius: 0;
   }
   .icon-bar + .icon-bar {
     margin-top: 4px;

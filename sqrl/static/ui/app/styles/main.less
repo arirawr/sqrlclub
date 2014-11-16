@@ -1,16 +1,12 @@
 @import "../lib/bootstrap/less/bootstrap.less";
-@import "./bootswatch.less";
-@import "./variables.less";
+@import "variables.less";
 @import (less) "../lib/angular-loading-bar/build/loading-bar.css";
 @import (less) "../lib/AngularJS-Toaster/toaster.css";
-
-@import "./customizations/loading-bar.less";
-@import "./customizations/date-picker.less";
 
 @icon-font-path: "../../../img/";
 
 .panel{
-	border-radius: 5px;
+  border-radius: 5px;
 }
 
 .ace-editor{
@@ -24,7 +20,7 @@
 .ace_print-margin{
   display:none !important;
 }
- 
+
 .col-center-block {
   float: none !important;
   display: block;
@@ -49,8 +45,6 @@
   margin-bottom:0px;
 }
 
-
-
 #editAccordion .panel-body{
   padding:0px;
   border:none;
@@ -65,16 +59,6 @@
   word-wrap:break-word;
 }
 
-
-
-
-
-
-
-
-
-
-
 .fadeout {
   -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 3s;
   -moz-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 3s;
@@ -88,4 +72,36 @@
 
 .fadeout.ng-hide-add {
   opacity: 1;
+}
+
+body {
+  height: 100%;
+  /* The html and body elements cannot have any padding or margin. */
+}
+
+.center {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Wrapper for page content to push down footer */
+#wrap {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  /* Negative indent footer by it's height */
+  margin: 0 auto -40px;
+}
+
+/* Set the fixed height of the footer here */
+#push,
+#footer {
+  padding: 10px 10px 0 10px;
+  text-align: center;
+}
+#footer {
+  background-color: @color-red;
+  color: #fff;
+  font-size: 14px;
 }
