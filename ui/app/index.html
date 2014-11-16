@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en" ng-app>
+<head>
+  <meta name="viewport" content="width-device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" media="all" href="css/main.css"/>
+  <title>sqrl</title>
+</head>
+<body>
+  <div class="navbar navbar-inverse">
+	  <div class="container">
+	  	<div class="navbar-header">
+	  		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+	  			<span class="icon-bar"></span>
+	  			<span class="icon-bar"></span>
+	  			<span class="icon-bar"></span>
+	  		</button>
+	  		<a class="navbar-brand" href="#">sqrl</a>
+	  	</div>
+	  </div>
+  </div>
+  <div class="container" ng-view></div>
+  <toaster-container toaster-options="{'position-class': 'toaster-bottom-right'}"></toaster-container>
+  <script src="js/requirelib.js" data-main="js/main.js"></script>
+</body>
+</html>

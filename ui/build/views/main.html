@@ -1,0 +1,67 @@
+<div class="panel panel-default">
+	<div class="panel-heading">Files</div>
+	<div class="panel-body">
+		<div class="btn-group btn-group-justified" role="group">
+			<div class="btn-group" role="group">
+				<button type="button" class="btn btn-default" ng-click="switchMode('javascript')">javascript</button>
+			</div>
+			<div class="btn-group" role="group">
+				<button type="button" class="btn btn-default" ng-click="switchMode('html')">html</button>
+			</div>
+			<div class="btn-group" role="group">
+				<button type="button" class="btn btn-default" ng-click="switchMode('css')">css</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">Files</div>
+	<div class="panel-body">
+		<span ng-repeat="file in files">
+			{{file}}
+		</span>
+	</div>
+</div>
+
+<div class="panel panel-default" ng-if="currentMode === 'javascript'">
+	<div class="panel-heading" style="background-color: #00F6FF;">JavaScript</div>
+		<div class="panel-body">
+			<div ui-ace="{
+							mode:'javascript',
+							useWrapMode: true,
+							require: ['ext-language_tools'],
+							advanced:{
+								enableSnippets: true,
+								enableBasicAutocompletion: true,
+								enableLiveAutocompletion: true
+							}
+						}"
+			 ng-model="code" style="height:200px"></div>
+		</div>
+</div>
+
+<div class="panel panel-default" ng-if="currentMode === 'html'" class="html-style">
+	<div class="panel-heading" style="background-color: #CC2614;">HTML</div>
+		<div class="panel-body">
+		<div ui-ace="{
+						mode:'html',
+						useWrapMode: true
+
+					}"
+			 ng-model="code" style="height:200px"></div>
+		</div>
+	</div>
+
+<div class="panel panel-default" ng-if="currentMode === 'css'" class="css-style">
+	<div class="panel-heading" style="background-color: #FF6E40;">CSS</div>
+
+		<div class="panel-body">
+			<div ui-ace="{
+						mode:'css',
+						useWrapMode: true
+
+					}"
+			 ng-model="code" style="height:200px"></div>
+		</div>
+	</div>
