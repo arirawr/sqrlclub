@@ -28,7 +28,13 @@ define([], function(){
             });
         };
 
+        $scope.userName = function(){
+          return UserService.getUserName();
+        };
+
         var login = (function(){
+            //getAcorns();
+
             var userName = UserService.getUserName();
 
             if(userName===''){
@@ -46,6 +52,7 @@ define([], function(){
             } else {
                 $scope.acorns = AcornService.acorns;
             }
+
         }());
     };
 

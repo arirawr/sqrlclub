@@ -3921,7 +3921,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 .navbar-brand {
   float: left;
-  padding: 22.5px 25;
+  padding: 22.5px 25px;
   font-family: "Chewy", Helvetica, Arial, sans-serif;
   font-size: 46px;
   line-height: 25px;
@@ -6675,6 +6675,7 @@ button.toast-close-button {
 .fadeout.ng-hide-add {
   opacity: 1;
 }
+html,
 body {
   height: 100%;
   /* The html and body elements cannot have any padding or margin. */

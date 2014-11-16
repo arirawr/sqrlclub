@@ -57,24 +57,15 @@ define([], function(){
             }
         };
 
-        $scope.addFile = function(fileType){
+        $scope.addFile = function(){
             var modalInstance = $modal.open({
                 templateUrl: 'views/addFile.html',
                 controller: 'AddFileController',
-                size:'sm',
-                resolve:{
-                    fileType: function(){
-                        return fileType;
-                    }
-                }
+                size:'sm'
             });
 
-            modalInstance.result.then(function(fileName){
-                if(fileName){
-                    var file = {
-                        fileType:fileType,
-                        fileName:fileName
-                    };
+            modalInstance.result.then(function(file){
+                if(file){
                     $scope.files.push(file);
                     $scope.selectFile(file);
                 }

@@ -1,11 +1,21 @@
 define([], function(){
     'use strict';
 
-    var AddFileController = function($scope, fileType, $modalInstance){
-        $scope.newFileName = '.'+fileType;
+    var AddFileController = function($scope, $modalInstance){
+        $scope.newFileName = '';
+        $scope.fileTypes = [
+            {ID:'.js', val:'.js'},
+            {ID:'.html', val:'.html'},
+            {ID:'.css', val:'.css'}
+        ];
+        $scope.fileType='';
 
         $scope.ok = function(){
-            $modalInstance.close($scope.newFileName);
+            var file={
+                fileType:$scope.fileType,
+                fileName:$scope.newFileName+$scope.fileType
+            };
+            $modalInstance.close(file);
         };
 
         $scope.enter = function(event){
@@ -24,5 +34,5 @@ define([], function(){
         }());
     };
 
-    return ["$scope", 'fileType', '$modalInstance', AddFileController];
+    return ["$scope", '$modalInstance', AddFileController];
 });

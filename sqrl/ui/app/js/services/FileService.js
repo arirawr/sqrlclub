@@ -41,22 +41,12 @@ define([], function(){
 		};
 
 		self.getFile = function(acornName, fileName, fileType) {
-			//var thing =$q.defer();
-			//thing.resolve(template[fileType]);
-			//return thing.promise;
-
-			//var key = acornName+'.'+fileName;
-
-			//if(cache[key]){
-			//	$q.when(cache[key]);
-			//}
-
 			var promise = $http.get('http://sqrl.club:5000/rest/'+getUserName()+'/acorns/'+acornName+'/'+fileName)
 				.then(function(result){
 					if(!result.data.file){
 						result.data.file = template[fileType];
+						self.saveFile(acornName,fileName,template[fileType]);
 					}
-					//cache[key] = result.data.file;
 					return {
 						fileName: fileName,
 						fileData: result.data.file
@@ -67,13 +57,6 @@ define([], function(){
 		};
 
 		self.saveFile = function(acornName, fileName, fileText){
-			//var thing = $q.defer();
-			//thing.resolve('yay!');
-			//return thing.promise;
-
-			//var key = acornName+'.'+fileName;
-			//cache[key] = fileText;
-
 			return $http.post('http://sqrl.club:5000/rest/'+UserService.getUserName()+'/acorns/'+acornName+'/'+fileName,
 				{
 					'file':fileText

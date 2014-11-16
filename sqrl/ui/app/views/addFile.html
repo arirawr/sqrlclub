@@ -2,7 +2,8 @@
     <h3 class="modal-title" style="color:white;">File Name</h3>
 </div>
 <div class="modal-body add-file">
-    <input type="text" ng-model="newFileName" ng-keypress="enter($event)" style="width:100%"/>
+    <input type="text" ng-model="newFileName" ng-keypress="enter($event)" style="width:70%;"/>
+       <select style="width:25%" ng-model="fileType" ng-options="type.ID as type.val for type in fileTypes"></select>
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="ok()">OK</button>

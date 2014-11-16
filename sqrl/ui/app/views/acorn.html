@@ -1,9 +1,10 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
-            <a href="#/acorns">
+            <a href="#/acorns" style="text-decoration: none;">
                 <span><</span>
                 <span style="margin-left: 10px;">back</span>
+            </a>
             <a class="pull-right"
                href="http://sqrl.club:5000/acorn/{{userName}}/{{currentAcorn}}/index.html"
                target="_blank">see it!
@@ -19,18 +20,7 @@
 
     <div class="row col-sm-12">
         <div class="col-sm-2">
-            <div class="panel panel-default panel-acorn">
-                <a href="http://sqrl.club:5000/acorn/{{userName}}/{{currentAcorn}}/index.html" target="_blank">
-                    <div class="panel-heading">
-                        <div>
-                        <span class="panel-title">
-                            see it!
-                        </span>
-                        <span class="pull-right glyphicon glyphicon-hand-right"></span>
-                        </div>
-                    </div>
-                </a>
-            </div>
+
             <div class="panel panel-default panel-acorn">
                 <div class="panel-body" id="editAccordion">
                     <accordion close-others="false">
@@ -41,7 +31,7 @@
                                    style="cursor:pointer;"
                                    ng-class="{'glyphicon-chevron-down': accordionStatus.html, 'glyphicon-chevron-right': !accordionStatus.html}"></i>
                             </accordion-heading>
-                            <ul class="list-group">
+                            <ul class="list-group" style="margin-bottom:0px">
                                 <li class="list-group-item"
                                     ng-repeat="file in files | filter:{fileType: 'html'}"
                                     ng-click="selectFile(file)"
@@ -50,9 +40,6 @@
                                     <span class="file-name">
                                         {{file.fileName}}
                                     </span>
-                                </li>
-                                <li class="list-group-item" ng-click="addFile('html')">
-                                    <span class="pull-left glyphicon glyphicon-plus" aria-hidden="true"></span>
                                 </li>
                             </ul>
                         </accordion-group>
@@ -63,7 +50,7 @@
                                    style="cursor:pointer;"
                                    ng-class="{'glyphicon-chevron-down': accordionStatus.css, 'glyphicon-chevron-right': !accordionStatus.css}"></i>
                             </accordion-heading>
-                            <ul class="list-group">
+                            <ul class="list-group" style="margin-bottom:0px">
                                 <li class="list-group-item"
                                     ng-repeat="file in files | filter:{fileType: 'css'}"
                                     ng-click="selectFile(file)"
@@ -72,9 +59,6 @@
                                     <span class="file-name">
                                         {{file.fileName}}
                                     </span>
-                                </li>
-                                <li class="list-group-item" ng-click="addFile('css')">
-                                    <span class="pull-left glyphicon glyphicon-plus" aria-hidden="true"></span>
                                 </li>
                             </ul>
                         </accordion-group>
@@ -85,7 +69,7 @@
                                    style="cursor:pointer;"
                                    ng-class="{'glyphicon-chevron-down': accordionStatus.js, 'glyphicon-chevron-right': !accordionStatus.js}"></i>
                             </accordion-heading>
-                            <ul class="list-group">
+                            <ul class="list-group" style="margin-bottom:0px">
                                 <li class="list-group-item"
                                     ng-repeat="file in files | filter:{fileType: 'js'}"
                                     ng-click="selectFile(file)"
@@ -95,22 +79,23 @@
                                             {{file.fileName}}
                                         </span>
                                 </li>
-                                <li class="list-group-item" ng-click="addFile('js')">
-                                    <span class="pull-left glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                </li>
                             </ul>
                         </accordion-group>
                     </accordion>
                 </div>
             </div>
+            <div ng-click="addFile('js')" style="border:none; margin-top:10px; padding-left:15px;">
+                <span class="pull-left glyphicon glyphicon-plus" aria-hidden="true"></span>
+                <span style="padding-left:7px;">new</span>
+            </div>
         </div>
         <div class="col-sm-10">
             <div class="panel panel-default">
-                <div class="panel-heading" style="background-color: #00F6FF;">
+                <div class="panel-heading" style="border-bottom:1px solid #808080">
                     <span>{{fileName}}</span>
                     <span ng-show="unsaved" class="fadeout">{{saveMessage}}</span>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body" style="padding:0px;">
                     <div ui-ace="{
                                     useWrapMode: true,
                                     onChange: aceChanged,

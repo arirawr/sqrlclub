@@ -40180,24 +40180,15 @@ define('controllers/AcornController',[], function(){
             }
         };
 
-        $scope.addFile = function(fileType){
+        $scope.addFile = function(){
             var modalInstance = $modal.open({
                 templateUrl: 'views/addFile.html',
                 controller: 'AddFileController',
-                size:'sm',
-                resolve:{
-                    fileType: function(){
-                        return fileType;
-                    }
-                }
+                size:'sm'
             });
 
-            modalInstance.result.then(function(fileName){
-                if(fileName){
-                    var file = {
-                        fileType:fileType,
-                        fileName:fileName
-                    };
+            modalInstance.result.then(function(file){
+                if(file){
                     $scope.files.push(file);
                     $scope.selectFile(file);
                 }
@@ -40271,7 +40262,13 @@ define('controllers/AcornsController',[], function(){
             });
         };
 
+        $scope.userName = function(){
+          return UserService.getUserName();
+        };
+
         var login = (function(){
+            //getAcorns();
+
             var userName = UserService.getUserName();
 
             if(userName===''){
@@ -40289,6 +40286,7 @@ define('controllers/AcornsController',[], function(){
             } else {
                 $scope.acorns = AcornService.acorns;
             }
+
         }());
     };
 
@@ -40341,11 +40339,21 @@ define('controllers/LoginController',[], function(){
 define('controllers/AddFileController',[], function(){
     
 
-    var AddFileController = function($scope, fileType, $modalInstance){
-        $scope.newFileName = '.'+fileType;
+    var AddFileController = function($scope, $modalInstance){
+        $scope.newFileName = '';
+        $scope.fileTypes = [
+            {ID:'.js', val:'.js'},
+            {ID:'.html', val:'.html'},
+            {ID:'.css', val:'.css'}
+        ];
+        $scope.fileType='';
 
         $scope.ok = function(){
-            $modalInstance.close($scope.newFileName);
+            var file={
+                fileType:$scope.fileType,
+                fileName:$scope.newFileName+$scope.fileType
+            };
+            $modalInstance.close(file);
         };
 
         $scope.enter = function(event){
@@ -40364,7 +40372,7 @@ define('controllers/AddFileController',[], function(){
         }());
     };
 
-    return ["$scope", 'fileType', '$modalInstance', AddFileController];
+    return ["$scope", '$modalInstance', AddFileController];
 });
 
 define('controllers/AddAcornController',[], function(){
@@ -40549,22 +40557,12 @@ define('services/FileService',[], function(){
 		};
 
 		self.getFile = function(acornName, fileName, fileType) {
-			//var thing =$q.defer();
-			//thing.resolve(template[fileType]);
-			//return thing.promise;
-
-			//var key = acornName+'.'+fileName;
-
-			//if(cache[key]){
-			//	$q.when(cache[key]);
-			//}
-
 			var promise = $http.get('http://sqrl.club:5000/rest/'+getUserName()+'/acorns/'+acornName+'/'+fileName)
 				.then(function(result){
 					if(!result.data.file){
 						result.data.file = template[fileType];
+						self.saveFile(acornName,fileName,template[fileType]);
 					}
-					//cache[key] = result.data.file;
 					return {
 						fileName: fileName,
 						fileData: result.data.file
@@ -40575,13 +40573,6 @@ define('services/FileService',[], function(){
 		};
 
 		self.saveFile = function(acornName, fileName, fileText){
-			//var thing = $q.defer();
-			//thing.resolve('yay!');
-			//return thing.promise;
-
-			//var key = acornName+'.'+fileName;
-			//cache[key] = fileText;
-
 			return $http.post('http://sqrl.club:5000/rest/'+UserService.getUserName()+'/acorns/'+acornName+'/'+fileName,
 				{
 					'file':fileText

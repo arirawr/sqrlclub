@@ -1,16 +1,25 @@
 <div class="row">
-    <div ng-click="addAcorn()">
-        <span>
-            <h3>Add Acorn</h3>
-        </span>
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-    </div>
+    <center>
+        <h2>
+            {{userName()}}'s Acorns
+        </h2>
+    </center>
 </div>
 
-<div class="row">
-    <div ng-repeat="acorn in acorns">
-        <div ng-click="goToAcorn(acorn)">
-            {{acorn}}
+<div class="row" style="margin:0 auto;">
+    <div ng-repeat="acorn in acorns" class="col-sm-3" style="padding:10px;">
+        <div ng-click="goToAcorn(acorn)" style="border:1px dashed red; height:100px;">
+            <center><div style="padding-top:40px;">{{acorn}}</div></center>
+        </div>
+    </div>
+    <div class="col-sm-3" style="padding:10px" ng-click="addAcorn()">
+        <div style="border:1px dashed red; height:100px;">
+            <center><div style="padding-top:40px;">
+                <span>
+            Add Acorn
+        </span>
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            </div></center>
         </div>
     </div>
 </div>
