@@ -1,0 +1,107 @@
+<<!DOCTYPE html>
+<html>
+<head>
+    <title>ilkuafsytdguhashfg</title>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 brd">
+            <a href="#/acorns">< back</a>
+        </div>
+        <div class="col-sm-12">
+            <h1 class="col-center-block">
+                {{currentAcorn}}
+            </h1>
+        </div>
+    </div>
+
+    <div class="row col-sm-12">
+        <div class="col-sm-2">
+            <div class="panel panel-default panel-acorn">
+                <div class="panel-heading">
+                    <div>
+                    <span class="panel-title">
+                        see it!
+                    </span>
+                    <span class="pull-right glyphicon glyphicon-hand-right"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default panel-acorn">
+                <div class="panel-body" id="editAccordion">
+                    <accordion close-others="false">
+                        <accordion-group is-open="accordionStatus.html">
+                            <accordion-heading>
+                                HTML
+                                <i class="pull-right glyphicon"
+                                   ng-class="{'glyphicon-chevron-down': accordionStatus.html, 'glyphicon-chevron-right': !accordionStatus.html}"></i>
+                            </accordion-heading>
+                            <ul class="list-group">
+                                <li class="list-group-item" ng-repeat="file in files | filter:{fileType: 'html'}" ng-click="selectFile(file)">
+                                    <span class="pull-left glyphicon glyphicon-file" aria-hidden="true"></span>
+                                    <span class="file-name">
+                                        {{file.fileName}}
+                                    </span>
+                                </li>
+                            </ul>
+                        </accordion-group>
+                        <accordion-group is-open="accordionStatus.css">
+                            <accordion-heading>
+                                CSS
+                                <i class="pull-right glyphicon"
+                                   ng-class="{'glyphicon-chevron-down': accordionStatus.css, 'glyphicon-chevron-right': !accordionStatus.css}"></i>
+                            </accordion-heading>
+                            <ul class="list-group">
+                                <li class="list-group-item" ng-repeat="file in files | filter:{fileType: 'css'}" ng-click="selectFile(file)">
+                                    <span class="pull-left glyphicon glyphicon-file" aria-hidden="true"></span>
+                                    <span class="file-name">
+                                        {{file.fileName}}
+                                    </span>
+                                </li>
+                            </ul>
+                        </accordion-group>
+                        <accordion-group is-open="accordionStatus.js">
+                            <accordion-heading>
+                                JavaScript
+                                <i class="pull-right glyphicon"
+                                   ng-class="{'glyphicon-chevron-down': accordionStatus.js, 'glyphicon-chevron-right': !accordionStatus.js}"></i>
+                            </accordion-heading>
+                            <ul class="list-group">
+                                <li class="list-group-item" ng-repeat="file in files | filter:{fileType: 'js'}" ng-click="selectFile(file)">
+                                        <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                                        <span class="file-name">
+                                            {{file.fileName}}
+                                        </span>
+
+                                </li>
+                            </ul>
+                        </accordion-group>
+                    </accordion>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-10">
+            <div class="panel panel-default">
+                <div class="panel-heading" style="background-color: #00F6FF;">
+                    <span>{{fileType}}</span>
+                    <span>-</span>
+                    <span>{{fileName}}</span>
+                    <span ng-show="unsaved" class="fadein fadeout">{{saveMessage}}</span>
+                </div>
+                <div class="panel-body">
+                    <div ui-ace="{
+                                    useWrapMode: true,
+                                    onChange: aceChanged,
+                                    onLoad: aceLoaded
+                                }"
+                         ng-model="fileText" class="ace-editor"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
